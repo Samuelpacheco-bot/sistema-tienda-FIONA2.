@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Casa Norte | Tienda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: { extend: { colors: { ink: '#202421', cream: '#f4f1ea', sage: '#dce6da', terracotta: '#c86b3c', blush: '#f3ddd5' }, fontFamily: { sans: ['DM Sans', 'sans-serif'], display: ['Playfair Display', 'serif'] } } }
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+</head>
+<body class="bg-cream text-ink font-sans">
+  <header class="sticky top-0 z-40 border-b border-ink/10 bg-cream/95 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
+      <a href="/" class="text-sm font-bold tracking-[.28em]">CASA <span class="text-terracotta">NORTE</span></a>
+      <nav class="hidden items-center gap-8 text-sm text-ink/70 md:flex"><a href="#catalogo" class="transition hover:text-terracotta">Catálogo</a><a href="#asesoria" class="transition hover:text-terracotta">Asesoría IA</a><a href="{{ url_for('admin_login') }}" class="transition hover:text-terracotta">Admin</a></nav>
+      <button id="openCart" class="group flex items-center gap-2 text-sm font-medium" aria-label="Abrir carrito"><span class="text-xl transition group-hover:text-terracotta">&#9675;</span> Carrito <span id="cartCount" class="grid h-6 min-w-6 place-items-center rounded-full bg-terracotta px-1.5 text-xs text-white">0</span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="relative overflow-hidden border-b border-ink/10 bg-sage">
+      <div class="absolute -right-20 -top-24 h-80 w-80 rounded-full border-[60px] border-white/30"></div>
+      <div class="relative mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+        <p class="mb-5 text-xs font-bold tracking-[.22em] text-terracotta">BELLEZA CURADA · RITUALES REALES</p>
+        <h1 class="max-w-3xl text-6xl leading-[.9] tracking-tight sm:text-7xl lg:text-8xl">Tu ritual empieza <span class="font-display italic text-terracotta">aquí.</span></h1>
+        <p class="mt-7 max-w-md text-lg leading-8 text-ink/65">Maquillaje y skincare seleccionados para acompañar tu rutina.</p>
+        <a href="#catalogo" class="mt-9 inline-flex items-center gap-3 bg-ink px-6 py-4 text-sm font-semibold text-white transition hover:bg-terracotta">Explorar catálogo <span>&darr;</span></a>
+      </div>
+    </section>
+
+    <section id="catalogo" class="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+      <div class="mb-10 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+        <div><p class="mb-3 text-xs font-bold tracking-[.22em] text-terracotta">LA COLECCION</p><h2 class="text-5xl tracking-tight sm:text-6xl">Encuentra tu esencial.</h2></div>
+        <span id="productSummary" class="text-sm text-ink/60">Cargando productos...</span>
+      </div>
+      <div class="mb-8 flex flex-wrap gap-2" role="group" aria-label="Filtrar catálogo"><button class="filter-button bg-ink px-4 py-2 text-sm text-white" data-filter="todos">Todos</button><button class="filter-button border border-ink/20 px-4 py-2 text-sm" data-filter="disponibles">Disponibles</button><button class="filter-button border border-ink/20 px-4 py-2 text-sm" data-filter="agotados">Agotados</button><button class="filter-button border border-ink/20 px-4 py-2 text-sm" data-filter="maquillaje">Maquillaje</button><button class="filter-button border border-ink/20 px-4 py-2 text-sm" data-filter="skincare">Skincare</button></div>
+      <div id="productGrid" class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3"></div>
+      <p id="emptyCatalog" class="hidden border border-dashed border-ink/30 p-12 text-center text-ink/60">No hay productos para este filtro.</p>
+    </section>
+
+    <section id="asesoria" class="bg-ink text-white">
+      <div class="mx-auto grid max-w-7xl gap-12 px-5 py-20 lg:grid-cols-[.8fr_1.2fr] lg:px-8 lg:py-24">
+        <div><p class="mb-4 text-xs font-bold tracking-[.22em] text-terracotta">ASESORIA CON IA</p><h2 class="text-5xl leading-none sm:text-6xl">Una recomendación <span class="font-display italic text-terracotta">a tu medida.</span></h2><p class="mt-6 max-w-md leading-7 text-white/60">Cuéntanos qué necesitas. La asesora revisará únicamente los productos disponibles y te orientará.</p></div>
+        <form id="advisorForm" class="max-w-2xl">
+          <label for="need" class="mb-2 block text-sm font-semibold">¿Qué estás buscando?</label>
+          <textarea id="need" name="necesidad" rows="3" required class="w-full resize-none border-0 border-b border-white/30 bg-transparent px-0 py-3 text-lg outline-none transition placeholder:text-white/35 focus:border-terracotta" placeholder="Ej. Necesito una rutina para piel sensible"></textarea>
+          <div class="mt-7 grid gap-6 sm:grid-cols-2"><div><label for="budget" class="mb-2 block text-sm font-semibold">Presupuesto</label><input id="budget" name="presupuesto" class="w-full border-0 border-b border-white/30 bg-transparent px-0 py-3 outline-none focus:border-terracotta" placeholder="Ej. Hasta $30"></div><div><label for="preferences" class="mb-2 block text-sm font-semibold">Preferencias</label><input id="preferences" name="preferencias" class="w-full border-0 border-b border-white/30 bg-transparent px-0 py-3 outline-none focus:border-terracotta" placeholder="Ej. Texturas ligeras"></div></div>
+          <button class="mt-8 bg-white px-6 py-4 text-sm font-semibold text-ink transition hover:bg-terracotta hover:text-white" type="submit">Consultar asesor <span class="ml-2">✦</span></button>
+          <div id="advisorResult" class="mt-7 hidden whitespace-pre-line border-l-2 border-terracotta pl-5 leading-7 text-white/80"></div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="border-t border-ink/10 bg-white px-5 py-6 text-xs text-ink/55 lg:px-8">
+    <div class="mx-auto flex max-w-7xl flex-wrap justify-between gap-3">
+      <span>Casa Norte</span>
+      <span>Hecho por Fioan Lian · Curso 2502</span>
+    </div>
+  </footer>
+
+  <div id="cartOverlay" class="fixed inset-0 z-50 hidden bg-ink/40"></div>
+  <aside id="cartPanel" class="fixed right-0 top-0 z-50 flex h-full w-full max-w-md translate-x-full flex-col bg-cream shadow-2xl transition-transform duration-300" aria-label="Carrito de compras">
+    <div class="flex items-center justify-between border-b border-ink/10 px-6 py-5"><h2 class="text-2xl">Tu carrito</h2><button id="closeCart" class="text-2xl text-ink/60 hover:text-terracotta" aria-label="Cerrar carrito">×</button></div>
+    <div id="cartItems" class="flex-1 overflow-y-auto px-6"></div>
+    <div class="border-t border-ink/10 px-6 py-6"><div class="mb-4 flex justify-between text-lg"><span>Total</span><strong id="cartTotal">$0.00</strong></div><button id="checkoutButton" class="w-full bg-ink py-4 text-sm font-semibold text-white transition hover:bg-terracotta">Finalizar compra</button><p id="checkoutMessage" class="mt-3 text-sm text-terracotta"></p></div>
+  </aside>
+
+  <script>
+    const cart = new Map();
+    let products = [];
+    let activeFilter = 'todos';
+    const imageFallback = 'https://www.pocobeauty.com/cdn/shop/files/individual-sheet-mask-with-shadow-edited.jpg?v=1737570876&width=540';
+    const money = value => new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'USD' }).format(value);
+    const escapeHtml = value => String(value).replace(/[&<>'"]/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[character]));
+
+    async function loadProducts() { const response = await fetch('/productos?estado=todos'); products = await response.json(); renderProducts(); }
+    function renderProducts() { const filtered = products.filter(product => activeFilter === 'todos' || activeFilter === 'disponibles' && product.stock > 0 || activeFilter === 'agotados' && product.stock === 0 || product.categoria === activeFilter); const available = products.filter(product => product.stock > 0).length; document.getElementById('productSummary').textContent = `${available} disponibles · ${products.length - available} agotados`; document.getElementById('emptyCatalog').classList.toggle('hidden', filtered.length > 0); document.getElementById('productGrid').innerHTML = filtered.map(product => `<article class="group overflow-hidden border border-ink/10 bg-white"><div class="relative aspect-[4/3] overflow-hidden bg-sage"><img src="${escapeHtml(product.imagen_url || '')}" alt="${escapeHtml(product.nombre)}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" onerror="this.onerror=null;this.src='${imageFallback}'"><span class="absolute left-3 top-3 bg-white/90 px-2 py-1 text-[10px] font-bold uppercase tracking-widest">${escapeHtml(product.categoria)}</span></div><div class="p-5"><div class="flex items-start justify-between gap-3"><h3 class="text-lg font-semibold">${escapeHtml(product.nombre)}</h3><strong class="whitespace-nowrap">${money(product.precio)}</strong></div><p class="mt-3 text-sm font-medium ${product.stock ? 'text-ink/55' : 'text-terracotta'}">${product.stock ? `${product.stock} unidades disponibles` : 'PRODUCTO AGOTADO'}</p>${product.stock ? `<button class="mt-5 border border-ink/25 px-4 py-2 text-sm font-medium transition hover:border-terracotta hover:text-terracotta" onclick="addToCart(${product.id})">Añadir al carrito +</button>` : '<span class="mt-5 inline-block text-xs font-bold uppercase tracking-widest text-terracotta">Sin existencias</span>'}</div></article>`).join(''); }
+
+    function addToCart(id) { const product = products.find(item => item.id === id); if (!product) return; const item = cart.get(id) || {...product, quantity: 0}; if (item.quantity < product.stock) item.quantity++; cart.set(id, item); renderCart(); openCart(); }
+    function renderCart() {
+      const items = [...cart.values()];
+      document.getElementById('cartCount').textContent = items.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById('cartTotal').textContent = money(items.reduce((sum, item) => sum + item.price * item.quantity, 0));
+      document.getElementById('cartItems').innerHTML = items.length ? items.map(item => `<div class="flex items-center gap-3 border-b border-ink/10 py-5"><img src="${escapeHtml(item.imagen_url || imageFallback)}" alt="" class="h-16 w-16 object-cover"><div class="min-w-0 flex-1"><p class="truncate font-semibold">${escapeHtml(item.nombre)}</p><p class="mt-1 text-sm text-ink/55">${money(item.precio)}</p><div class="mt-2 flex items-center gap-3 text-sm"><button onclick="changeQuantity(${item.id}, -1)" class="h-6 w-6 border border-ink/25">−</button><span>${item.quantity}</span><button onclick="changeQuantity(${item.id}, 1)" class="h-6 w-6 border border-ink/25">+</button></div></div><strong>${money(item.precio * item.quantity)}</strong></div>`).join('') : '<p class="py-10 text-center text-ink/55">Tu carrito está vacío.</p>';
+    }
+    function changeQuantity(id, amount) { const item = cart.get(id); if (!item) return; item.quantity += amount; if (item.quantity <= 0) cart.delete(id); else if (item.quantity <= item.stock) cart.set(id, item); else item.quantity = item.stock; renderCart(); }
+    function openCart() { document.getElementById('cartPanel').classList.remove('translate-x-full'); document.getElementById('cartOverlay').classList.remove('hidden'); }
+    function closeCart() { document.getElementById('cartPanel').classList.add('translate-x-full'); document.getElementById('cartOverlay').classList.add('hidden'); }
+    document.querySelectorAll('.filter-button').forEach(button => button.addEventListener('click', () => { activeFilter = button.dataset.filter; document.querySelectorAll('.filter-button').forEach(item => item.classList.remove('bg-ink', 'text-white')); button.classList.add('bg-ink', 'text-white'); renderProducts(); }));
+    document.getElementById('openCart').addEventListener('click', openCart); document.getElementById('closeCart').addEventListener('click', closeCart); document.getElementById('cartOverlay').addEventListener('click', closeCart);
+
+
+    document.getElementById('checkoutButton').addEventListener('click', async () => { const items = [...cart.values()].map(item => ({ producto_id: item.id, cantidad: item.quantity })); const message = document.getElementById('checkoutMessage'); if (!items.length) { message.textContent = 'Añade un producto antes de continuar.'; return; } const response = await fetch('/ventas', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ productos: items }) }); const result = await response.json(); message.textContent = response.ok ? `Compra confirmada · ${money(result.total)}` : result.error; if (response.ok) { cart.clear(); renderCart(); loadProducts(); } });
+    document.getElementById('advisorForm').addEventListener('submit', async event => { event.preventDefault(); const resultBox = document.getElementById('advisorResult'); resultBox.classList.remove('d-none'); resultBox.textContent = 'Consultando el catálogo...'; const formData = new FormData(event.target); const response = await fetch('/api/asesoria', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(Object.fromEntries(formData)) }); const result = await response.json(); resultBox.textContent = response.ok ? result.respuesta : result.error; });
+    renderCart(); loadProducts().catch(() => { document.getElementById('productSummary').textContent = 'No se pudo cargar el catálogo'; });
+  </script>
+</body>
+</html>
